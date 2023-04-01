@@ -1,0 +1,15 @@
+{% extends "inventario/base.html" %}
+{% block title %}My Blog{% endblock %}
+{% block content %}
+<h1> Inventario </h1>
+{% for producto in productos %}
+    <h2>
+        <a href="{{ producto.get_absolute_url }}"> {{ producto.nombre }} </a>
+    </h2>
+
+    <p class="date">
+        Precio: {{ producto.precio }} | Costo: {{ producto.costo }} | Stock: {{ producto.existencia }}
+    </p>
+    {{ producto.descripcion|truncatewords:30|linebreaks }}
+{% endfor %}
+{% endblock %}

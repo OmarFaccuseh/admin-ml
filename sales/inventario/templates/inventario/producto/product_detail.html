@@ -1,0 +1,16 @@
+{% extends "inventario/base.html" %}
+{% block title %}{{ producto.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ producto.nombre }}</h1>
+<h2>
+    {{producto.descripcion}}
+
+    Costo: {{producto.costo}}
+
+    Precio: {{producto.precio}}
+
+    Stock: {{producto.existencia}}
+</h2>
+
+{% endblock %}
