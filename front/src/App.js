@@ -6,6 +6,8 @@ import DocComponent from './Components/docComponent';
 import PdfComponent from './Components/pdfComponent';
 import { useShoppingCart } from "../src/Components/carritoContext"
 import {useReactToPrint} from 'react-to-print'
+import { Link } from 'react-router-dom';
+
 
 
 // Comment added 01
@@ -55,6 +57,7 @@ function App({order}) {
     <div>
       <main className="container">
 
+          <h2> <Link to="/"> Home </Link></h2>    
           <h1 className="text-center my-3">
             NOTE GENERATOR
           </h1>

@@ -31,6 +31,8 @@ export function ListOrders(){
 		< >
 			<main className="container" >
 
+			  <h2> <Link to="/"> Home </Link></h2>		
+
 	          <h1 className="text-center my-4">
 	            ORDENES DE VENTA (ML)
 	          </h1>
