@@ -10,6 +10,7 @@ djangorestframework = "*"
 requests = "*"
 django-model-utils = "*"
 psycopg2 = "*"
+pymupdf = "*"
 
 [dev-packages]
 

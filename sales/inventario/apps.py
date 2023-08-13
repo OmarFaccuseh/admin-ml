@@ -81,7 +81,8 @@ class InventarioConfig(AppConfig):
                     data = {
                         'order_id': order['id'],
                         'product': first_product['item']['seller_sku'] or first_product['item']['title'],
-                        'customer': recibe_name,
+                        # FIXME fixed : dfault value for customer por si ML elimina al usuario
+                        'customer': recibe_name or 'none',
                         'unit_price': first_product['unit_price'],
                         'qty': first_product['quantity'],
                         'subtotal': order['total_amount'],

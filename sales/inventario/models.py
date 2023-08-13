@@ -79,10 +79,10 @@ class Order(models.Model):
         (2, 'entregado'),
         (3, 'cancelado'),
     )
-    # PRODUCT ID DEBE SER UN MANY2MANY DE PRODUCTO TODO.
+    # FIXME PRODUCT ID DEBE SER UN MANY2MANY DE PRODUCTO.
     order_id = models.CharField(max_length=250, default='NA')
     product = models.CharField(max_length=250, default=None, null=True)
-    customer = models.CharField(max_length=250, default='dona nona')
+    customer = models.CharField(max_length=250, default='dona nona')  # TODO Anallitica: porque no funciono este default, review with breakpoint
     unit_price = models.FloatField(default=0.0)
     qty = models.IntegerField(default=0)
     subtotal = models.FloatField(default=0.0)

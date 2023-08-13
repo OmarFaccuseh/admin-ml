@@ -9,6 +9,13 @@ import {useReactToPrint} from 'react-to-print'
 
 
 // Comment added 01
+// this comentario debe ser agrgeado al commmit
+// antes de debe recuperar la ultima version de la verison en el repositorio
+// realizar merge con la version recuperada de este la version actualizada, en el sevidor
+// revisar y probar que todos los commits sera verificados por el admin del pryecto.
+// para arecursas ese metodo de revision es tomar el significado
+
+
 function App({order}) {
 
   const [showPdf, setShowPdf] = useState(true);
@@ -34,23 +41,33 @@ function App({order}) {
     settNotas(document.getElementById('notasInput').value);
     settFolio(document.getElementById('folioInput').value);
   };
+
+  // Aqui se almacenara una referencia al DOM element de pdfComp, para que printNote acceda
   const pdfComp = useRef()
   const printNote = () => {
-
                     const blob = new Blob([], { type: 'application/pdf' });
                     window.open(URL.createObjectURL(blob));
                     console.log("DOOOCCCC PPPDDDDFFF")
-                    console.log(pdfComp.current)
-
-                    
+                    console.log(pdfComp.current) 
                   }
 
       /*useReactToPrint({      
       content: () => pdfComp.current,
       documentTitle: 'Order_print',
       onAfterPrint: ()=> alert('Impresion finalizada')
+      
+      LAMBDA QUE SE DEBE APLICAR 
+
+      A partir de aqui los cambios hay que commiterlos para que no de planchen las actulizacione
+      hacer merge de todos los posibles cambios parezca bugueables en el mismo ins
+      tante
+      antes de hacer committ eliminar estos comentarios para que no se almacenne en el cache de las 
+      particiones
   }); */
 
+
+ // Directorio activo active directory spipa dodoria swipe copy
+ 
   return (
     <div>
       <main className="container">
@@ -93,10 +110,8 @@ function App({order}) {
               <div className="card p-3">
                 <div className="m-0">
 
-                  <div id="doc-pdf" >
-                  
-                      <PdfComponent ref={pdfComp}/>
-                      
+                  <div id="doc-pdf">
+                      <PdfComponent ref={pdfComp}/>  // regresame tu DOM en esta var
                   </div>
                 </div>
 
@@ -115,9 +130,10 @@ function App({order}) {
 
 }
 
+
 export default App;
 
-
+// como mierda voy a por voy replicar los datos del la base de datos 
 
 
 

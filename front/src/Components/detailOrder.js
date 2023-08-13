@@ -42,6 +42,7 @@ export function DetailOrder() {
 
           <div id="doc-app">
             <App order={orderDetail}/>
+
           </div>
         </main>
       </div>

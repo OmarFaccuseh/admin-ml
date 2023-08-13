@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import ListOrders from './Components/listOrders'
 import DetailOrder from './Components/detailOrder';
+import Facts from './Components/facts';
 import reportWebVitals from './reportWebVitals';
 import CarritoProvider from './Components/carritoContext'
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
@@ -19,7 +20,8 @@ root.render(
         <CarritoProvider style={{ backgroundColor: 'white' }}>
           <Routes>
             <Route index element={<ListOrders />}         /> 
-            <Route path='orders/:order_id' element={<DetailOrder />}     />
+            <Route path='orders/:order_id' element={<DetailOrder />} />
+            <Route path='facts' element={<Facts />} />
           </Routes>
         </CarritoProvider>
       </BrowserRouter>
