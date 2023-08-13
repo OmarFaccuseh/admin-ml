@@ -15,10 +15,9 @@ class InventarioConfig(AppConfig):
         from datetime import datetime, timezone, timedelta
         import json
 
-
         if not Tokens.objects.all():
             print('NOT TOKEN')
-            Tokens.objects.create(token="APP_USR-715970904874422-012113-180ea3db6bba4f33b30a65848921a42e-117331702",
+            Tokens.objects.create(token="APP_USR-715970904874422-040720-cb7b6fd3335130e90e968cd133af2706-117331702",
                                   refresh_token="TG-63cc27c087c06b000150141c-117331702")
 
         tokens_obj = Tokens.objects.get(id=1)
