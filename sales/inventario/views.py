@@ -8,21 +8,31 @@ from .models import Producto, Linea, Nota, Order
 from rest_framework import viewsets
 from .serializers import ProductoSerializer, LineaSerializer, NotaSerializer, OrderSerializer
 from django.core import serializers
-
+from .apps import getOrders
+import json
 
 def product_list(request):
-    return render(request, 'inventario/producto/product_list.html', {'productos': Producto.objects.all()})
-
+    response = {'productos': Producto.objects.all()}
+    return render(request, 'inventario/producto/product_list.html', response)
 
 def product_detail(request, prod):
     producto = get_object_or_404(Producto, slug=prod)
     return render(request, 'inventario/producto/product_detail.html', {'producto': producto})
 
+@csrf_exempt
+def orders(request):
+    # Get updated order
+    status_update = getOrders()
+    orders = Order.objects.all().order_by('-date')[:99]
+    qs_json = serializers.serialize('json', orders)
+    data = json.dumps({'orders': qs_json, 'status': status_update})
+    serialize_resp = HttpResponse(data, content_type='application/json')
+    return serialize_resp
+
 
 # param can also get with:  request.GET.get("order_id")
 @csrf_exempt
 def order_detail(request, order_id):
-
     order = Order.objects.filter(order_id=order_id)
     # no jala  serializer = OrderSerializer(order)
     # no jala  jsonresp_resp = JsonResponse(serializer.data)
@@ -41,13 +51,12 @@ class LineaView(viewsets.ModelViewSet):
     serializer_class = LineaSerializer
     queryset = Linea.objects.all()
 
-
 class NotaView(viewsets.ModelViewSet):
     serializer_class = NotaSerializer
     queryset = Nota.objects.all()
 
 
-# this only return first 100 elements
+# this only return first 100 elements FIXME: NOT IN USE
 class OrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all().order_by('-date')[:99]

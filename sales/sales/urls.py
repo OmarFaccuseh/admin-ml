@@ -27,7 +27,7 @@ router = routers.DefaultRouter()
 router.register(r'productos', views.ProdcutoView, 'producto')
 router.register(r'lineas', views.LineaView, 'linea')
 router.register(r'notas', views.NotaView, 'nota')
-router.register(r'orders', views.OrderView, 'order')  # supongo que esto genera ruta de lista y de detalle
+router.register(r'orders', views.OrderView, 'order')  # FIXME: NOT IN USE
 #router.register(r'orders/(?P<order_id>\d+)', views.OrderView, 'order_detail')
 
 urlpatterns = [

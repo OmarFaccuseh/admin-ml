@@ -12,6 +12,8 @@ import App from '../App'
 import React, { Component , useState, useEffect, useRef} from "react";
 import PdfInovices from './pdfInvoicesComp';
 import PopHelp from './popHelpComponent';
+import { PopSelectGroupComponent } from './popHelpComponent';
+
 
 
 
@@ -40,11 +42,12 @@ function MakeFacts(){
   const [factsByGroup, setFactsByGroup] = useState([]);
   const [xml_files, setXmlFiles] = useState([]);
   const [popHelp,setPopHelp]=useState(false)
+  const [popSelect,setPopSelect]=useState(false)
+
 
 
   var res = []
   const pdfComp = useRef();
-  const popHelpRef = useRef();
 
 
   var xml_objs = [];
@@ -247,9 +250,12 @@ function MakeFacts(){
   function onPopHelp(event){
     setPopHelp(!popHelp);
   }
-
-  const closePopHelp=()=>{
-        setPopHelp(false)
+  function onPopSelect(event){
+    setPopSelect(!popSelect);
+  }
+  const closePop=()=>{
+    setPopHelp(false)
+    setPopSelect(false)
   }
   
 
@@ -260,13 +266,17 @@ function MakeFacts(){
       <div>
       {
         popHelp?
-        <PopHelp closePopHelp={closePopHelp}/> : ""
+        <PopHelp closePopHelp={closePop}/> : ""
+      }
+      {
+        popSelect?
+        <PopHelp closePopHelp={closePop}/> : ""
       }
       </div>
 
       <div class="d-flex  justify-content-center">
         <div class="d-flex justify-content-start">
-          <h5 className="d-flex align-items-center my-4 px-2 text-muted bg-light" onClick={(evnt)=>(popHelp(evnt))}>
+          <h5 className="d-flex align-items-center my-4 px-2 text-muted bg-light" onClick={(evnt)=>(onPopHelp(evnt))}>
             How work?
           </h5>
         </div>
@@ -284,9 +294,9 @@ function MakeFacts(){
         <div class="mb-3 d-flex flex-column " style={{ "width": "50%", "height": "50%", "justifyContent": "flex-end"  }}>
           <span class="mb-3"> Current Config: Config Name / No config saved yet</span>
           <div class="mb-3 d-flex flex-row ">
-            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopHelp(evnt))}> Open groups </button>
-            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopHelp(evnt))}> Save changes </button>
-            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopHelp(evnt))}> Save new config </button>
+            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopSelect(evnt))}> Open groups </button>
+            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopSelect(evnt))}> Save changes </button>
+            <button class="btn btn-secondary m-1" id="select_save" onClick={(evnt)=>(onPopSelect(evnt))}> Save new config </button>
           </div>
         </div> 
       </div> 

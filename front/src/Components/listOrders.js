@@ -15,9 +15,9 @@ export function ListOrders(){
 	function getData(){
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios
-		.get("http://127.0.0.1:8000/api/orders/", {mode: "no-cors"})
+		.get("http://127.0.0.1:8000/inventario/orders/", {mode: "no-cors"})  //.get("http://127.0.0.1:8000/api/orders/", {mode: "no-cors"})
 		.then((res) => {
-			setOrders(res.data)
+			setOrders(JSON.parse(res.data.orders))
 			console.log("RESPONSE ORDERS ", res)
 		})
 		.catch((err) => console.log(err))
@@ -49,7 +49,8 @@ export function ListOrders(){
 	            </thead>
 	            <tbody>
 	            {
-	              orders.map((orden, index)=>{
+	              orders.map((item, index)=>{
+	              const orden =item.fields
 	              const {order_id , product, subtotal, customer, qty, status} = orden;
 	              console.log('STATTT '+ JSON.stringify(orders));
 	              return(

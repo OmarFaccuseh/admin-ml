@@ -1,5 +1,7 @@
-import React, { Component, Fragment, useContext } from "react";
+import React, { Component, Fragment, useContext, useRef, useEffect, useState} from "react";
 import { Text, View, StyleSheet, PDFViewer } from "@react-pdf/renderer";
+import axios from 'axios';
+
 
 const styles = StyleSheet.create({
 
@@ -112,7 +114,6 @@ const styles = StyleSheet.create({
 
 });
 
-
 export function PopHelpComponent(props){
   return (
   <Fragment>
@@ -129,4 +130,35 @@ export function PopHelpComponent(props){
   </Fragment>
   )
 }
+
+function PopSelectGroupComponent(props){
+  const updateConfigs = null;
+  // hacer un fetch a django , traer las configs y actualizar setConfigs
+
+  useEffect(()=>{
+    
+  }, [])
+
+
+  return (
+  <Fragment>
+     <div>
+      {
+        <div className="popup my-5 p-5 d-flex justify-content-center" style={styles.popup}>
+          <div className="popup-header d-flex flex-column">
+              <h1 onClick={props.closePopHelp} className="d-flex" style={styles.closepop}>X</h1>
+              <select>
+               {props.options.map((option) => ( <option value={option.value}>{option.label}</option>
+
+            ))}
+
+             </select>
+          </div>
+        </div>
+      }
+      </div>
+  </Fragment>
+  )
+}
+
 export default PopHelpComponent;
