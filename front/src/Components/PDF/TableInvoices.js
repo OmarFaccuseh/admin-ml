@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end" ,
     width: '100%',
     display: 'flex',
-    marginLeft: 'auto',
         backgroundColor: '#D0D0D0',
 
   },

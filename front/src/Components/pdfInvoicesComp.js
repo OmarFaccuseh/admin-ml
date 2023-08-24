@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize : 12,
     padding : 20,
-
   },
   section: {
     margin: 20,

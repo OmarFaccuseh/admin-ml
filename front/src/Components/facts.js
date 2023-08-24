@@ -43,6 +43,8 @@ function MakeFacts(){
   const [xml_files, setXmlFiles] = useState([]);
   const [popHelp,setPopHelp]=useState(false)
   const [popSelect,setPopSelect]=useState(false)
+  const [configs,setConfigs]=useState(false)
+
 
 
 
@@ -270,7 +272,7 @@ function MakeFacts(){
       }
       {
         popSelect?
-        <PopHelp closePopHelp={closePop}/> : ""
+        <PopHelp closePopHelp={closePop} setConfigs={setConfigs}/> : ""
       }
       </div>
 
