@@ -1,7 +1,9 @@
 import React, {Component, useState, useEffect} from 'react';
 import axios from 'axios';
-import DetailOrder from './detailOrder';
+import OrderDetail from './OrderDetail';
 import { Link } from 'react-router-dom';
+import Navbar from '../Navigation/Navbar'
+
 
 
 export function ListOrders(){
@@ -33,9 +35,10 @@ export function ListOrders(){
 
 	return (
 		< >
-			<main className="container" >
-
-			  <h2> <Link to="/"> Home </Link></h2>		
+			<main className="container">
+			  <div>
+		        <Navbar />
+		      </div>		
 			  <div className="d-flex col-12 m-3" >
 				  <h1 className="d-flex col-12 justify-content-center">
 		            ORDERS
