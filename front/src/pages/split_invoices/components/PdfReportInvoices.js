@@ -9,12 +9,11 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import React, { forwardRef , Component } from "react";
-import { useShoppingCart } from "../Components/carritoContext"
-import Table from "../Components/PDF/TableInvoices"
-import RobotoLight from '../Styles/Fonts/Roboto-Light.ttf'
-import RobotoMedium from '../Styles/Fonts/Roboto-Medium.ttf'
-import RobotoMediumItalic from '../Styles/Fonts/Roboto-MediumItalic.ttf'
-import RobotoLightItalic from '../Styles/Fonts/Roboto-LightItalic.ttf'
+import Table from "./TableInvoicesPdf"
+import RobotoLight from '../../../Styles/Fonts/Roboto-Light.ttf'
+import RobotoMedium from '../../../Styles/Fonts/Roboto-Medium.ttf'
+import RobotoMediumItalic from '../../../Styles/Fonts/Roboto-MediumItalic.ttf'
+import RobotoLightItalic from '../../../Styles/Fonts/Roboto-LightItalic.ttf'
 
 
 // Create styles
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
 });
 
 
-export const BasicDocument= forwardRef((props, pdfComp) => {
+export const PdfReportInvoices= forwardRef((props, pdfComp) => {
   
   console.log("props recivied in pdfinvoicesComp :", props)
 
@@ -162,4 +161,4 @@ export const BasicDocument= forwardRef((props, pdfComp) => {
   );
 
 } );
-export default BasicDocument;
+export default PdfReportInvoices;

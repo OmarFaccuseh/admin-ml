@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     paddingLeft: 5, 
-    paddingBottom: 10,
-
+    paddingBottom: 5,
+    paddingTop: 10,
   },
   rowHead: {
     flexDirection: "row",
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 });
 
 
-export function Table(itemsRes){
+export default function Table(itemsRes){
   const [groups, setGroups] = useState([]) 
   
   useEffect(()=>{
@@ -143,7 +143,7 @@ export function Table(itemsRes){
   })});
 
   return (
-  <Fragment>
+    <Fragment>
     <View style={styles.tableContainer}>
     {groups.map((group, i ) => {
       const name = group.group_name;
@@ -162,9 +162,7 @@ export function Table(itemsRes){
             <Text style={styles.row4Head}>IVA</Text>
             <Text style={styles.row5Head}>Total</Text>
           </View>
-          {/*<TableFooter items={data.items} />*/}
           {group.invoices.map((invoice, i) => {
-            //const prod_name = products.find(p => p.id == item.codigo).nombre;
             return (
               <View style={styles.row} key={i}>
                 <Text style={styles.row1}>{invoice.RFC}</Text>
@@ -186,7 +184,6 @@ export function Table(itemsRes){
     })
     }
     </View>
-  </Fragment>
+    </Fragment>
   )
 }
-export default Table;

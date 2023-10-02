@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import ListOrders from './Components/ListOrders'
-import OrderDetail from './Components/OrderDetail';
-import Facts from './Components/facts';
+import ListOrders from './pages/list_orders/ListOrders'
+import OrderDetail from './pages/detail_order/OrderDetail';
+import Facts from './pages/split_invoices/facts';
 import reportWebVitals from './reportWebVitals';
-import CarritoProvider from './Components/carritoContext'
+import CarritoProvider from './context/carritoContext'
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import $ from 'jquery';
 import Popper from 'popper.js';

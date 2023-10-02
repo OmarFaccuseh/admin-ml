@@ -95,13 +95,16 @@ class InventarioConfig(AppConfig):
                     'content-type': 'application/x-www-form-urlencoded'
                 }
                 response = requests.request("POST", url, headers=headers, data=payload)
+                print("RESPONSE ON TRY REFRESH TOKEN: ")
+                print(response.text)   # {"message":"invalid client_id or client_secret","error":"invalid_client","status":400,"cause":[]}
                 if response:
                     print("NEW TOKEN RESP: ")
                     print(response.json())
                     tokens_obj.token = response.json()['access_token']
                     tokens_obj.refresh_token = response.json()['refresh_token']
                     tokens_obj.save()
-            except:
-                print("ERROR al intentar resfrescar token API Mercadolibre")
+            except Exception as e:
+                print("ERROR al intentar resfrescar token API Mercadolibre: ")
+                print(e)
 
         getOrders()

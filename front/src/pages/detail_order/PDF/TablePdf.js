@@ -1,10 +1,7 @@
 import React, { Component, Fragment, useContext } from "react";
 import { Text, View, StyleSheet, PDFViewer } from "@react-pdf/renderer";
-import products from "../../data/products.json";                                    // solo se extrae el nombre del prodcuto
-
 
 const styles = StyleSheet.create({
-
   tableContainer: {
    flexDirection: "row",
    flexWrap: "wrap",
@@ -103,33 +100,28 @@ const styles = StyleSheet.create({
 });
 
 
-export function Table(items){
-  const cartItems = items.items  // no se porque, el array se empaqueta dentro de un objeto como atributo "items"
+export default function Table(items){
+  const cartItems = items.items
   return (
   <Fragment>
     <View style={styles.tableContainer}>
-      {/*<TableHeader />*/}
       <View style={styles.rowHead}>
         <Text style={styles.row1Head}>Producto</Text>
         <Text style={styles.row2Head}>Cant.</Text>
         <Text style={styles.row3Head}>Precio U.</Text>
         <Text style={styles.row4Head}>Subtotal</Text>
       </View>
-      {/*<TableFooter items={data.items} />*/}
       {cartItems.map((item, i) => {
-        //const prod_name = products.find(p => p.id == item.codigo).nombre;
         return (
           <View style={styles.row} key={i}>
-            <Text style={styles.row1}>{item.nombre}</Text>
-            <Text style={styles.row2}>{item.cantidad}</Text>
-            <Text style={styles.row3}>  {'$ ' + item.precio}</Text>
-            <Text style={styles.row4}>  {'$ ' + item.subtotal}</Text>
+            <Text style={styles.row1}> {item.nombre} </Text>
+            <Text style={styles.row2}> {item.cantidad} </Text>
+            <Text style={styles.row3}> {'$ ' + item.precio} </Text>
+            <Text style={styles.row4}> {'$ ' + item.subtotal} </Text>
           </View>
         )})
       }
-
     </View>
     </Fragment>
   )
 }
-export default Table;

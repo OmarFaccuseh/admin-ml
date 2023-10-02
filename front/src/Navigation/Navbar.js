@@ -23,19 +23,13 @@ const Navbar = () => {
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
         <ul className="navbar-nav">
           <li className="nav-item active">
-            <Link className="nav-link" to="/"> 
-              Home <span className="sr-only">(current)</span>
-            </Link>
+            <Link className="nav-link" to="/"> Home </Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
-              Features
-            </a>
+            <Link className="nav-link" to="/"> Orders </Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
-              Pricing
-            </a>
+            <Link className="nav-link" to="/facts"> SplitInvoces </Link>
           </li>
           <li className="nav-item dropdown">
             <a
@@ -46,21 +40,15 @@ const Navbar = () => {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Dropdown link
+              Dropdown 
             </a>
             <div
               className="dropdown-menu"
               aria-labelledby="navbarDropdownMenuLink"
             >
-              <a className="dropdown-item" href="#">
-                Action
-              </a>
-              <a className="dropdown-item" href="#">
-                Another action
-              </a>
-              <a className="dropdown-item" href="#">
-                Something else here
-              </a>
+              <a className="dropdown-item" href="#"> Action </a>
+              <a className="dropdown-item" href="#"> Another action </a>
+              <a className="dropdown-item" href="#"> Something else here </a>
             </div>
           </li>
         </ul>

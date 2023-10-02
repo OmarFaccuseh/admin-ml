@@ -17,7 +17,7 @@ export function useShoppingCart() {
   return useContext(carritoContexto)
 }
 
-export function CarritoProvider ({children}){
+export default function CarritoProvider ({children}){
 
   const [cartItems, setCartItems] = useState([]);
   const [folio, setFolio] = useState();
@@ -142,8 +142,6 @@ export function CarritoProvider ({children}){
   )
 
 }
-
-export default CarritoProvider;
 
 
 /*

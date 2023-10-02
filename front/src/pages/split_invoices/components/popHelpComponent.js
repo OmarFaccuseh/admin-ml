@@ -1,10 +1,8 @@
 import React, { Component, Fragment, useContext, useRef, useEffect, useState} from "react";
-import { Text, View, StyleSheet, PDFViewer } from "@react-pdf/renderer";
+import {StyleSheet} from "@react-pdf/renderer";
 import axios from 'axios';
 
-
 const styles = StyleSheet.create({
-
   tableContainer: {
    flexDirection: "row",
    flexWrap: "wrap",
@@ -102,26 +100,23 @@ const styles = StyleSheet.create({
     marginLeft: "auto", 
     marginRight: "auto",
     width: "70%",
-        color: "white",
-
+    color: "white",
   },
-
-  closepop:{
+  popHelp:{
     justifyContent: "end",
     fontSize: 17,
     color: "white",
   }
-
 });
 
-export function PopHelpComponent(props){
+export default function PopHelpComponent(props){
   return (
   <Fragment>
      <div>
       {
         <div className="popup my-5 p-5 d-flex justify-content-center" style={styles.popup}>
           <div className="popup-header d-flex flex-column">
-              <h1 onClick={props.closePopHelp} className="d-flex" style={styles.closepop}>X</h1>
+              <h1 onClick={props.onClosePop} className="d-flex" style={styles.popHelp}>X</h1>
               <h5>Seleccion de una sola vez los XML, cada grupo sera uuna tabla independiente que agrupara y mostrara los totales de las facturas que cumplan con los criterios</h5>
           </div>
         </div>
@@ -131,34 +126,30 @@ export function PopHelpComponent(props){
   )
 }
 
-function PopSelectGroupComponent(props){
+export function PopSelectGroupComponent(props){
   const updateConfigs = null;
-  // hacer un fetch a django , traer las configs y actualizar setConfigs
+  // hacer un fetch a django , traer las configs de grupos y actualizar props.setConfigs
 
-  useEffect(()=>{
-    
-  }, [])
-
+  useEffect(()=>{ }, [])
 
   return (
-  <Fragment>
-     <div>
-      {
-        <div className="popup my-5 p-5 d-flex justify-content-center" style={styles.popup}>
-          <div className="popup-header d-flex flex-column">
-              <h1 onClick={props.closePopHelp} className="d-flex" style={styles.closepop}>X</h1>
-              <select>
-               {props.options.map((option) => ( <option value={option.value}>{option.label}</option>
+    <Fragment>
+    <div>
+    {
+      <div className="popup my-5 p-5 d-flex justify-content-center" style={styles.popup}>
+        <div className="popup-header d-flex flex-column">
+            <h1 onClick={props.closePopHelp} className="d-flex" style={styles.closepop}>X</h1>
+            <select>
+              {props.options.map((option) => ( <option value={option.value}>{option.label}</option>
 
-            ))}
+          ))}
 
-             </select>
-          </div>
+            </select>
         </div>
-      }
       </div>
-  </Fragment>
+    }
+    </div>
+    </Fragment>
   )
 }
 
-export default PopHelpComponent;

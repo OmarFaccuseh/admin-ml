@@ -1,23 +1,24 @@
 import React, { Component , useState, useEffect} from 'react';
-import { useShoppingCart } from "../Components/carritoContext"
-import products from "../data/products.json"                                    // solo se extrae el nombre del prodcuto
+import { useShoppingCart } from "../../../context/carritoContext"
 import axios from "axios";
-import { Page, Text, View, Document, BlobProvider } from '@react-pdf/renderer'
+import getNowDate from '../../../utility/utility.js'
 
-export function DocComponent(){
+export default function DocComponent(){
 
-  const { cartItems, folio, cliente, nombre, addNewItem, changeArticuloItem,
-          changeCantidadItem,  changePrecioItem, removeFromCart,
-          total, fecha, settFecha } = useShoppingCart();
-
-  // Not in use           
-  const [data, setData] = useState([]); 
+  const { cartItems, folio,  nombre, addNewItem, changeCantidadItem,  changePrecioItem, 
+          removeFromCart, total, settFecha} = useShoppingCart();
 
   useEffect(()=>{
-    setNowDate()
+    setDate()
     getData()
     setDetailOrder() 
   },[])
+
+  function setDate(e){
+    let today = getNowDate()
+    document.getElementById("fechaInput").value = today + ""
+    settFecha(today)
+  }
 
   function setDetailOrder(){
     const isDetail = false;  // no se si deba recibir del contexto o como propiedad desde el "link to"
@@ -32,7 +33,7 @@ export function DocComponent(){
     axios
     .get("http://127.0.0.1:8000/api/productos/", {mode: "no-cors"})
     .then((res) => {
-      setData(res.data)
+      this.setData(res.data)
       console.log("RESPONSE PRODUCTOS ", res)
     })
     .catch((err) => console.log(err))
@@ -40,11 +41,9 @@ export function DocComponent(){
 
   function addProductRows() {
     const defaultId = 3;
-    const precio = data.find(p => p.id == defaultId).precio
-    const nombre = data.find(p => p.id == defaultId).nombre
-
+    const precio = "" // data.find(p => p.id == defaultId).precio
+    const nombre = "" // data.find(p => p.id == defaultId).nombre
     addNewItem(defaultId, precio, nombre);
-
   }
 
   function deleteTableRows(index)  {
@@ -52,7 +51,6 @@ export function DocComponent(){
   }
 
   function onChangeArticuloItem(index, evnt) {
-
     /* FOR PREDEFINED PRODUCTS
     const { value } = evnt.target;  //id
     const precio = data.find(p => p.id == value).precio
@@ -76,22 +74,6 @@ export function DocComponent(){
     settFecha(value);
   }
 
-  function setNowDate(){
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-    var yyyy = today.getFullYear();
-    if(dd<10){
-        dd='0'+dd;
-    }
-    if(mm<10){
-        mm='0'+mm;
-    }
-    today = yyyy+'-'+mm+'-'+dd;
-    document.getElementById("fechaInput").value =today+"";
-    settFecha(today)
-  }
-
   return (
     <React.Fragment >
     <div style={{ backgroundColor: 'white' }}>
@@ -108,7 +90,7 @@ export function DocComponent(){
         </div>
         <div class="d-flex col-4">
           <label for="FechaInput" class="form-label ms-3"> Fecha: </label>
-          <input type="date" class="form-control mx-2" id="fechaInput" defaultValue={(e)=>setNowDate(e)}/>
+          <input type="date" class="form-control mx-2" id="fechaInput" defaultValue={()=>setDate()}/>
         </div>
       </div>
 
@@ -128,29 +110,29 @@ export function DocComponent(){
           cartItems.map((item, index)=>{
           const {id, nombre, cantidad, precio, subtotal} = item;
           return(
-              <tr>
-                <td style={{"width": "50%"}}>
-                  <input name="articulo" type="text" defaultValue={nombre} onChange={(evnt)=>(onChangeArticuloItem(index, evnt))} style={{"width": "100%"}} />                  
-                </td>
-                <td style={{"width": "5%"}}>
-                  <input name="cantidad" type="text" defaultValue={cantidad} onChange={(evnt)=>(onChangeCantidadItem(index, evnt))} style={{"width": "100%"}} />
-                </td>
-                <td style={{"width": "20%"}}> 
-                  <input name="precioU" type="text" defaultValue={precio} onChange={(evnt)=>(onChangePrecioItem(index, evnt))} style={{"width": "100%"}}/>
-                </td>
-                <td style={{"width": "20%"}}>
-                  <input name="subtotal" type="text" defaultValue={subtotal} style={{"width": "100%"}}/>
-                </td>
-                <td style={{"width": "5%"}}>
-                  <button className="btn btn-outline-danger" onClick={()=>(deleteTableRows(index))} style={{"width": "100%"}}> x </button>
-                </td>
-              </tr>
+            <tr>
+              <td style={{"width": "50%"}}>
+                <input name="articulo" type="text" defaultValue={nombre} onChange={(evnt)=>(onChangeArticuloItem(index, evnt))} style={{"width": "100%"}} />                  
+              </td>
+              <td style={{"width": "5%"}}>
+                <input name="cantidad" type="text" defaultValue={cantidad} onChange={(evnt)=>(onChangeCantidadItem(index, evnt))} style={{"width": "100%"}} />
+              </td>
+              <td style={{"width": "20%"}}> 
+                <input name="precioU" type="text" defaultValue={precio} onChange={(evnt)=>(onChangePrecioItem(index, evnt))} style={{"width": "100%"}}/>
+              </td>
+              <td style={{"width": "20%"}}>
+                <input name="subtotal" type="text" defaultValue={subtotal} style={{"width": "100%"}}/>
+              </td>
+              <td style={{"width": "5%"}}>
+                <button className="btn btn-outline-danger" onClick={()=>(deleteTableRows(index))} style={{"width": "100%"}}> x </button>
+              </td>
+            </tr>
           )
-
           })
         }
         </tbody>
       </table>
+
       <div class="row justify-content-end">
         <label for="montoTotal" class="form-label col-1"> TOTAL:  </label>
         <span id="montoTotal" class= "col-2" > { total } </span>
@@ -163,10 +145,7 @@ export function DocComponent(){
     </div>  
     </React.Fragment>
   );
-
 }
- export default DocComponent;
-
 
  // SELECT FOR PREDEFINED PRODUCTS
  // <select id="selectProd" value={id} class="chosen-select input-sm form-control" data-chosen=""

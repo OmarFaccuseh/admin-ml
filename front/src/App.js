@@ -1,8 +1,5 @@
 import React, { Component , useState, useEffect} from "react";
-import ListOrders from './Components/ListOrders';
-import Navbar from "./Navigation/Navbar.js";
-
-// TODO:  ESTE DEBERIA SER APP, y que desde aqui se renderize solo LIST ORDERS !!!!!!!!
+import ListOrders from './pages/list_orders/Components/ListOrders';
 
 export function App() {
 

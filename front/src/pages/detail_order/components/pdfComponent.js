@@ -9,16 +9,12 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import React, { forwardRef , Component } from "react";
-import { useShoppingCart } from "../Components/carritoContext"
-import Table from "../Components/PDF/Table"
-import RobotoLight from '../Styles/Fonts/Roboto-Light.ttf'
-import RobotoMedium from '../Styles/Fonts/Roboto-Medium.ttf'
-import RobotoMediumItalic from '../Styles/Fonts/Roboto-MediumItalic.ttf'
-import RobotoLightItalic from '../Styles/Fonts/Roboto-LightItalic.ttf'
-
-
-
-
+import { useShoppingCart } from "../../../context/carritoContext"
+import Table from "../PDF/TablePdf"
+import RobotoLight from '../../../Styles/Fonts/Roboto-Light.ttf'
+import RobotoMedium from '../../../Styles/Fonts/Roboto-Medium.ttf'
+import RobotoMediumItalic from '../../../Styles/Fonts/Roboto-MediumItalic.ttf'
+import RobotoLightItalic from '../../../Styles/Fonts/Roboto-LightItalic.ttf'
 
 // Create styles
 const styles = StyleSheet.create({

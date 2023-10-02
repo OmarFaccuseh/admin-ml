@@ -1,21 +1,10 @@
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  PDFViewer,
-  Image,
-  Font,
-} from "@react-pdf/renderer";
-import App from '../App'
+import { Document, Page, Text, View, StyleSheet, PDFViewer, Image, Font,} from "@react-pdf/renderer";
 import React, { Component , useState, useEffect, useRef} from "react";
-import PdfInovices from './pdfInvoicesComp';
-import PopHelp from './popHelpComponent';
-import { PopSelectGroupComponent } from './popHelpComponent';
-
-
-
+import PdfReportInvoices from './components/PdfReportInvoices';
+import PopHelp from './components/popHelpComponent';
+import Navbar from '../../Navigation/Navbar'
+import _ from "lodash";
+import TableGroups from "./components/TableGroups";
 
 const styles = StyleSheet.create({  
   tableRadius: {
@@ -36,37 +25,28 @@ const resJoke = [{"name": "GP_1", "invoices": [{"RFC": "FERRE0390332", "razon": 
                 },]
 
 
-function MakeFacts(){
-
+export default function MakeFacts(){
   const [groups, setGroups] = useState([]);
-  const [factsByGroup, setFactsByGroup] = useState([]);
+  const [factsByGroup, setFactsByGroup] = useState([]); // guarda las reduce_facts del grupo, y sumatorias de estas.
   const [xml_files, setXmlFiles] = useState([]);
   const [popHelp,setPopHelp]=useState(false)
   const [popSelect,setPopSelect]=useState(false)
-  const [configs,setConfigs]=useState(false)
-
-
-
+  const [configs,setConfigs]=useState(false)  // recover config groups from backend
 
   var res = []
   const pdfComp = useRef();
 
-
-  var xml_objs = [];
-  var reduce_facts = [
-    {"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
-    {"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
-    {"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
-    ];
-
+  var reduce_facts = [  // guarda solo ciertos campos , TODO: hacerlo hook? no por ahora
+    //{"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
+    //{"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
+    //{"RFC": "ADWADAF122321", "razon": "Nombre de la empresa", "subtotal": 1234, "iva" : 45, "total" : 21346 },
+  ];
 
   useEffect(()=>{
     setGroups(currGroups => {
-      // slice copia el arreglo, splice borra desde indice 0 hasta 0 (nada en este caso), y agrega lo del 3er arg. 
+      // slice copia el arreglo, splice borra desde hasta, y agrega 3er arg. 
       let newArray = currGroups.slice()
-      newArray.splice(0, 0, { name : 'default_group',                                                     // only = operator
-                              criteria : [{'field' : 'emisor',  'operator' : '=',  'value' : 'Ferrecsa'}] // field: RFC(receptor), razon, subtotal, iva, total
-      });
+      newArray.splice(0, 0, { name : 'default_group',  criteria : [{'field' : 'emisor',  'operator' : '=',  'value' : 'Ferrecsa'}] });
       return newArray;
     })
   },[]);
@@ -74,18 +54,17 @@ function MakeFacts(){
   function onChangeFiles (event){
     setXmlFiles(event.target.files);
   }
-  
 
   function onNewCriterion (name, event){
     setGroups(currGroups => {
-      return currGroups.map((item, index) => {
-        if (name == item.name){
-          let newArray = item.criteria.slice()
-          newArray.splice(newArray.length, newArray.length, { 'field' : 'new',  'operator' : 'new',  'value' : 'new' });
-          return {...item, criteria: newArray}
+      return currGroups.map((grupo, index) => {
+        if (name == grupo.name){
+          let newArray = grupo.criteria.slice()
+          newArray.splice(newArray.length, newArray.length, { 'field' : 'new',  'operator' : '=',  'value' : 'new' });
+          return {...grupo, criteria: newArray} // unecesary
         }
         else {
-            return item;
+            return grupo;
         }
       })
     })
@@ -97,23 +76,51 @@ function MakeFacts(){
       newArray.splice(newArray.length, newArray.length, { name : 'GGGGGG',
                               criteria : [{'field' : '',  'operator' : '',  'value' : ''}]
       });
-      return newArray;
+      return newArray;  // unecesary
     })
   }
 
-  function onChangeCriterion(nameCriterion, nameGroup, index, event){
+  function onDelGroup(indexGroup, event){
+    setGroups( currGroups => {
+      let newArray = currGroups.slice()
+      newArray.splice(indexGroup, 1);
+      return newArray;  // unecesary
+    });
+  }
+
+  function onChangeCriterion(namePartCriterion, nameGroup, indexCriterion, event){
+    console.log('onchangecriterion event')
+    console.log(event)
     setGroups( groups => {
-        return groups.map((group) => {
-          if (nameGroup == group.name){
-            let newArray = group.criteria.slice()
-            newArray[index][nameCriterion] = event.target.value            
-            return {...group, criteria : newArray }
+      return groups.map((group) => {
+        if (nameGroup == group.name){
+          let newArrayCriteria = group.criteria.slice()
+          // antes de asignar valor llamar a validatecriterion ?
+          newArrayCriteria[indexCriterion][namePartCriterion] = event.target.value
         }
         else {
             return group;
         }
       })
     });
+  }
+
+  function validateCriterion(group, newCriterion){  // FIXME
+    let f = newCriterion.field;
+    let o = newCriterion.operator;
+    let v = newCriterion.value;
+
+    if (!f || !o){
+      console.log("FALSE: FIELD or OPERATOR")
+       return false;
+    }
+    if (group.criteria.some(c => _.isEqual(c, newCriterion))){   // can't exist twice criterion
+              console.log(group.criteria)
+              console.log(newCriterion)
+       console.log("FALSE: TWICE CRITERION")
+       return false;
+    }
+    return true
   }
 
   function onChangeNameGroup(ind, event){
@@ -144,38 +151,43 @@ function MakeFacts(){
     });
   }
 
-  function generate(event){
+  function generate(event){   // FIXME: this should be in backend
+    
     var readXml=null;
     var reader = new FileReader();
 
-    // read recursive all xml files
+    // read recursive all xml files & fill reduce_facts
     function readFile(index) {
+
       if( index >= xml_files.length ){
         filterFacts()
-        return; // ... break recursive call
+        return; // ... break reading Files
       }
       var file = xml_files[index];
 
       reader.onload = function(e) {          
+        
         readXml= e.target.result;    // string xml
         var parser = new DOMParser();
         var doc = parser.parseFromString(readXml, "application/xml");
-        xml_objs.push(doc)
 
         const ele_customer = doc.getElementsByTagName("cfdi:Receptor")[0]  // htmlcollection list
-        const ele_items    = doc.getElementsByTagName("cfdi:Concepto")        // handled like array
-        var ele_taxes      = doc.getElementsByTagName('cfdi:Impuestos');
+        const ele_items = doc.getElementsByTagName("cfdi:Concepto")        // handled like array
+        var ele_taxes = doc.getElementsByTagName('cfdi:Impuestos');
         var taxes_translate = 0;
         for(var i = 0; i < ele_taxes.length; i++){
             taxes_translate = Number(ele_taxes[i].getAttribute('TotalImpuestosTrasladados')); 
             if (taxes_translate > 0) {break;}
         }
-
         const attr_rfc  = ele_customer.getAttribute("Rfc")
         const attr_name = ele_customer.getAttribute("Nombre")
         const sum_subtotal = Array.from(ele_items).reduce((prev, curr) => prev + Number(curr.getAttribute("Importe")), 0);
         
-        reduce_facts.push({"RFC" : attr_rfc, "razon": attr_name, "subtotal": sum_subtotal, "iva": taxes_translate, "total": sum_subtotal + taxes_translate,})
+        reduce_facts.push({"RFC" : attr_rfc, 
+                           "razon": attr_name, 
+                           "subtotal": sum_subtotal, 
+                           "iva": taxes_translate, 
+                           "total": sum_subtotal + taxes_translate,})
       
         readFile(index+1) // ...recursive call
       }
@@ -183,28 +195,28 @@ function MakeFacts(){
     }
     readFile(0);
 
-    // ... Filter by criteria's groups
+    // filter by criteria's groups
     function filterFacts(){
+      
       groups.map((group, index,) => {
         
-        console.log("ALL GROUPs :  " + groups)
+        console.log("ALL GROUPs :  " + JSON.stringify(groups))
         console.log("IN GROUP :  " + group.name)
         console.log("REDUCE FACTS :  " + JSON.stringify(reduce_facts))
 
-        
-
         function satisfyCriteria(fact) {   // Need satisfy all criterion
-          var satisfy = true;            
-          for(var i=0; i < group.criteria.length; i++){
-
-            console.log("CRITERIA : " + i + "  " + JSON.stringify(group.criteria[i]))
-            
-            const field_criterion =  isNaN(group.criteria[i].field ) ? group.criteria[i].field : Number(group.criteria[i].field )    
+          
+          var satisfy = true;        
+          console.log("CRITERIA : " + i + "  " + JSON.stringify(group.criteria))    
+          for(var i=0; i < group.criteria.length; i++){            
+            const field_criterion =  isNaN(group.criteria[i].field) ? group.criteria[i].field : Number(group.criteria[i].field )    
             const operator_criterion =  group.criteria[i].operator 
-            const value_criterion =  isNaN(group.criteria[i].value ) ? group.criteria[i].value : Number(group.criteria[i].value)  
+            const value_criterion =  isNaN(group.criteria[i].value) ? group.criteria[i].value : Number(group.criteria[i].value)  
 
-            if ( (isNaN(field_criterion) || isNaN(value_criterion)) && operator_criterion != "=" ){
-              console.log("Los operadores '<' y '>' solo se pueden validar si el campo y criterio son numeros, si no, incuplira el criterio")
+            //console.log("CRITERIoN value : " + i + "  " + JSON.stringify(group.criteria[i]))
+
+            if ( isNaN(value_criterion) && operator_criterion != "=" ){
+              console.log("Los operadores '<' y '>' solo se pueden validar si el criterio es numero, si no, incuplira el criterio")
               satisfy = false;
               break;
             }
@@ -232,7 +244,7 @@ function MakeFacts(){
           return satisfy;
         }
 
-        const group_facts = reduce_facts.filter(fact => true)
+        const group_facts = reduce_facts.filter(fact => satisfyCriteria(fact))
         const subtotal_facts = group_facts.reduce((prev, curr) => prev + curr.subtotal, 0);
         const iva_facts      = group_facts.reduce((prev, curr) => prev + curr.iva, 0);
         const total_facts    = group_facts.reduce((prev, curr) => prev + curr.total, 0);
@@ -244,9 +256,9 @@ function MakeFacts(){
                   return newArray;
         }) 
       })
+      console.log("facts by group:")
+      console.log(factsByGroup)
     }
-
-
   }
 
   function onPopHelp(event){
@@ -255,7 +267,7 @@ function MakeFacts(){
   function onPopSelect(event){
     setPopSelect(!popSelect);
   }
-  const closePop=()=>{
+  const onClosePop=()=>{
     setPopHelp(false)
     setPopSelect(false)
   }
@@ -264,15 +276,17 @@ function MakeFacts(){
   return (
     <div>
       <main className="container px-5">
-
+      <div>
+         <Navbar />
+      </div>   
       <div>
       {
         popHelp?
-        <PopHelp closePopHelp={closePop}/> : ""
+        <PopHelp onClosePop={onClosePop}/> : ""
       }
       {
         popSelect?
-        <PopHelp closePopHelp={closePop} setConfigs={setConfigs}/> : ""
+        <PopHelp onClosePop={onClosePop} setConfigs={setConfigs}/> : ""
       }
       </div>
 
@@ -303,94 +317,29 @@ function MakeFacts(){
         </div> 
       </div> 
 
-      <div class="mb-3">
-        <h3 class="m-4"> GRUPOS </h3>
-
-        <table class="table table-bordered" id="groups"  style={styles.tableRadius}>
-          <tbody>
-          {
-            groups.map((group, indexGp)=>{
-            const {name, criteria} = group;
-            return(
-              <tr key={indexGp}>
-                <td  style={styles.tableRadius} class="">
-                  <div class=" col-12 d-flex p-2">
-                    <input type="text" onChange={(evnt)=>(onChangeNameGroup(indexGp, evnt))} class="border-0 col-11" /> 
-                    <button type="button" class="btn btn-warning col-1" >Delete</button>
-                  </div>
-                  <p name="criteria_label" type="text"> Criteria </p>
-
-                  <table class="table table-bordered" id="criteria_by_group" >
-                    <thead class="table-success">
-                      <tr class='col-12 '>
-                        <th scope="col" style={{"width": "32%"}}>Field</th>
-                        <th scope="col" style={{"width": "32%"}}>Is</th>
-                        <th scope="col" style={{"width": "32%"}}>To Value</th>
-                        <th scope="col" style={{"width": "4%"}}> </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {
-                      criteria.map((criterion, index)=>{
-                      const {field, operator, value} = criterion;
-                      return(
-                        <tr key={index}> 
-                          <td> <input type="text" defaultValue={field} onChange={(evnt)=>(onChangeCriterion("field", name, index, evnt))} class="border-0" style={{"width": "100%"}}/> </td>
-                          <td> 
-                          <select class="form-select" defaultValue={operator} onChange={(evnt)=>(onChangeCriterion("operator", name, index, evnt))} style={{"width": "100%"}}>
-                            <option value="=" >=</option>
-                            <option value=">">&gt;</option>
-                            <option value="<">&lt;</option>
-                          </select>
-                          </td>
-                          <td> <input type="text" defaultValue={value} onChange={(evnt)=>(onChangeCriterion("value", name, index, evnt))} class="border-0" style={{"width": "100%"}}/></td>
-                          <td> <button type="button" class="btn btn-danger" onClick={(evnt)=>(onDelCriterion(indexGp, index, evnt))} style={{"width": "100%"}}>X</button> </td>
-                        </tr>  
-                      )
-                      })
-                    }
-                    </tbody>
-                  </table>  
-                  <div class="d-flex justify-content-end">
-                  <button id="select_xmls" onClick={(evnt)=>(onNewCriterion(name, evnt))} class="btn btn-dark" type="button" aria-expanded="false" style={{"align" : "right"}}>
-                    New Criterion 
-                  </button>
-                  </div>
-                </td>
-              </tr>
-            )
-            })
-          }
-          </tbody>
-        </table>
-      </div> 
+      <TableGroups groups={groups} events={[onChangeNameGroup, onDelGroup, onNewCriterion, onChangeCriterion, onDelCriterion]} />
 
       <div class="d-flex col-12 mb-3 justify-content-end">
-           <button onClick={(evnt)=>(onNewGroup(evnt))} class="btn btn-secondary" type="button" >
-              New group 
-           </button>
+        <button onClick={(evnt)=>(onNewGroup(evnt))} class="btn btn-secondary" type="button" >
+          New group 
+        </button>
       </div>
 
       <div class="col-12 d-flex justify-content-center">
-           <button onClick={(evnt)=>(generate(evnt))} class="btn btn-primary m-1" type="button">
-              Generate info 
-           </button>
-           <button onClick={(evnt)=>(generate(evnt))} class="btn btn-primary m-1 btn-secondary" type="button">
-              Save data 
-           </button>
+        <button onClick={(evnt)=>(generate(evnt))} class="btn btn-primary m-1" type="button">
+          Generate info 
+        </button>
+        <button onClick={(evnt)=>(generate(evnt))} class="btn btn-primary m-1 btn-secondary" type="button">
+          Save data 
+        </button>
       </div>
 
       <div id="doc-facts-gp" >
-         {factsByGroup ? <PdfInovices res={factsByGroup} /> : <p>Loading...</p>}   //regresame tu DOM en esta var
+        {factsByGroup ? <PdfReportInvoices res={factsByGroup} /> : <p>Loading...</p>}   //regresame tu DOM en esta var
       </div>
 
       </main>
     </div>
   )
-
-
 }
-
-
-export default MakeFacts;
 
